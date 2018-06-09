@@ -12,8 +12,8 @@ import nltk
 DATA_PATH = './data/'
 TEXT_PATH = './text/'
 WIKIPEDIA_XML = sys.argv[1]
-TIER_PATH = 'distances.pickle'
-XML_OUT = 'partial_xml.txt'
+TIER_PATH = 'distances2.pickle'
+XML_OUT = 'partial_xml2.txt'
 PREAMBLE = 'preamble.txt'
 POSTAMBLE = 'postamble.txt'
 
