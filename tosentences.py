@@ -46,14 +46,22 @@ def clean_sentence(text):
     text = re.sub(r'[^\w\s\.\-]', r'', text)
     text = text.lower()
     text = re.sub(r'[0-9]+', 'NUM', text)
+    text = text.replace('\n', ' ')
+    text = re.sub(r'\s*', ' ', text)
+    text = text.strip()
     return text
 
 with open(sentencePath, 'wb+') as sentence_fp:
     with open(labelPath, 'wb+') as label_fp:
         for (s, l) in data:
 
-            sentence_fp.write(clean_sentence(s))
-            sentence_fp.write('\n')
+            cs = clean_sentence(s)
 
-            label_fp.write(l.lower().replace(' ', '_'))
-            label_fp.write('\n')
+            if cs == '':
+                continue
+            else:
+                sentence_fp.write(cs)
+                sentence_fp.write('\n')
+
+                label_fp.write(l.lower().replace(' ', '_'))
+                label_fp.write('\n')
