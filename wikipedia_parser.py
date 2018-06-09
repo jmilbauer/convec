@@ -3,6 +3,7 @@ import codecs
 import csv
 import time
 import os
+import sys
 
 """
 This code is heavily based on:
@@ -10,7 +11,7 @@ https://www.heatonresearch.com/2017/03/03/python-basic-wikipedia-parsing.html
 """
 
 DATA_PATH = './data/'
-WIKIPEDIA_XML = 'enwiki-latest-pages-articles.xml'
+WIKIPEDIA_XML = 'testwiki.txt'
 ARTICLES_PATH = 'articles.csv'
 REDIRECT_PATH = 'articles_redirect.csv'
 TEMPLATE_PATH = 'articles_template.csv'
@@ -50,7 +51,7 @@ with codecs.open(articlesPath, 'w', ENCODING) as articlesFH, \
     templateWriter.writerow(['id', 'title'])
 
 #
-for even, elem in etree.iterparse(pathWikiXML, events=('start', 'end')):
+for event, elem in etree.iterparse(wikipediaXmlPath, events=('start', 'end')):
     tname = strip_tag_namespace(elem.tag)
 
     if event == 'start':
@@ -70,6 +71,8 @@ for even, elem in etree.iterparse(pathWikiXML, events=('start', 'end')):
         elif tname == 'redirect':
             redirect = elem.attrib['title']
         elif tname == 'ns':
+            print(elem)
+            sys.exit()
             ns = int(elem.text)
         elif tname == 'page':
             totalCount += 1
