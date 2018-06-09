@@ -91,9 +91,9 @@ for i in range(1, FLOOD_DEPTH+1):
                 in_page = True
                 bodycount += 1
                 partial_bodycount += 1
-                if partial_bodycount == 500:
+                if partial_bodycount == 1000:
                     partial_bodycount = 0
-                    print("Link Depth: {}. Articles read: {}".format(i, bodycount))
+                    print("Link Depth: {}. Articles read: {}. Dataset size so far: {}".format(i, bodycount, len(all_pages)))
                 xml_buffer = etree.tostring(elem)
                 #xml_buffer.append('<page>')
 
@@ -119,11 +119,9 @@ for i in range(1, FLOOD_DEPTH+1):
                     if elem.text == None:
                         waiting = True
                     else:
-                        links = map(init_cap, return_links(elem.text))
-                        for link in links:
-                            if link not in all_pages:
-                                tiers[i].add(link)
-                            all_pages.add(link)
+                        links = set([init_cap(l) for l in return_links(elem.text) if l not in all_pages])
+                        tiers[i].union(links)
+                        all_pages.union(links)
                         going_to_read = False
 
         if event == 'end':
