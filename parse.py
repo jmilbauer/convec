@@ -6,6 +6,9 @@ import os
 import sys
 import re
 import cPickle as pickle
+import nltk
+
+tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
 """
 Referenced https://www.heatonresearch.com/2017/03/03/python-basic-wikipedia-parsing.html to learn to use iterparse.
@@ -38,7 +41,7 @@ ADJACENCY_FILE = 'adjacency.pickle'
 REDIRECT_FILE = 'redirect.pickle'
 ENCODING = "utf-8"
 
-link_pattern = r'(\[\[([A-z ]*?)(?:\|([A-z ]*?))?\]\])'
+link_pattern = r'(\[\[([0-9A-z \(\)\.\-]*?)(?:\|([0-9A-z \(\)\.\-]*?))?\]\])'
 
 # get all the paths
 wikipediaXmlPath = os.path.join(DATA_PATH, WIKIPEDIA_XML)
@@ -71,10 +74,22 @@ def return_links(text):
         results.append(match.group(2))
     return results
 
+def surface_match(matchobj):
+    if matchobj.group(3) == None:
+        return matchobj.group(2)
+    else:
+        return matchobj.group(3)
+
+def surface_form(sentence):
+    return re.sub(link_pattern, surface_match, sentence)
+
 def process_text(article, text):
     adjacency_matrix[article] = {}
     targets = return_links(text)
+    sentences = map(surface_form, tokenizer.tokenize(text))
+    print(sentences)
     #surface_text =
+
 
     for target in targets:
         target = target
