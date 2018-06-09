@@ -97,7 +97,7 @@ for i in range(1, FLOOD_DEPTH+1):
 
             if in_page:
                 if tname == 'title':
-                    if elem.text == None:
+                    if elem.text == None or len(elem.text) < 1:
                         continue
                     else:
                         title = init_cap(elem.text)
@@ -156,7 +156,7 @@ for event, elem in etree.iterparse(wikipediaXmlPath, events=('start', 'end')):
             in_page = True
         if in_page:
             if tname == 'title':
-                if elem.text == None:
+                if elem.text == None or len(elem.text) < 1:
                     continue
                 else:
                     title = init_cap(elem.text)
@@ -172,11 +172,11 @@ for event, elem in etree.iterparse(wikipediaXmlPath, events=('start', 'end')):
                     waiting = True
                 else:
                     fake = u"<page>"
-                    fake += u"<title>{}<\\title>".format(title)
-                    fake += u"<ns>0<\\ns>"
+                    fake += u"<title>{}</title>".format(title)
+                    fake += u"<ns>0</ns>"
                     fake += u"<id>0</id>"
-                    fake += u"<text>{}<\\text>".format(elem.text)
-                    fake += u"<\\page>"
+                    fake += u"<text>{}</text>".format(elem.text)
+                    fake += u"</page>"
                     all_xml.append(fake)
 
     if event == 'end':
@@ -185,11 +185,11 @@ for event, elem in etree.iterparse(wikipediaXmlPath, events=('start', 'end')):
                 if waiting and ns == '0' and waiting and not is_redirect and (title in all_pages):
                     waiting = False
                     fake = u"<page>"
-                    fake += u"<title>{}<\\title>".format(title)
-                    fake += u"<ns>0<\\ns>"
+                    fake += u"<title>{}</title>".format(title)
+                    fake += u"<ns>0</ns>"
                     fake += u"<id>0</id>"
-                    fake += u"<text>{}<\\text>".format(elem.text)
-                    fake += u"<\\page>"
+                    fake += u"<text>{}</text>".format(elem.text)
+                    fake += u"</page>"
                     all_xml.append(fake)
 
         if tname == 'page':
