@@ -76,7 +76,7 @@ all_xml = []
 for i in range(1, FLOOD_DEPTH+1):
 
     tiers[i] = set([])
-
+    bodycount = 0
     in_page = False
     ns = None
     going_to_read = False
@@ -88,6 +88,9 @@ for i in range(1, FLOOD_DEPTH+1):
         if event == 'start':
             if tname == 'page':
                 in_page = True
+                bodycount += 1
+                if bodycount % 100 == 0:
+                    print("Link Depth: {}. Articles read: {}".format(i, bodycount))
                 xml_buffer = etree.tostring(elem)
                 #xml_buffer.append('<page>')
 
