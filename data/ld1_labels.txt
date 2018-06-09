@@ -5619,9 +5619,6 @@ toni_morrison
 toni_morrison
 toni_morrison
 toni_morrison
-toni_morrison
-toni_morrison
-toni_morrison
 theodore_dreiser
 theodore_dreiser
 theodore_dreiser
@@ -6295,8 +6292,6 @@ native_son
 native_son
 native_son
 native_son
-native_son
-native_son
 a_farewell_to_arms
 a_farewell_to_arms
 a_farewell_to_arms
@@ -9055,8 +9050,6 @@ mark_twain
 mark_twain
 mark_twain
 mark_twain
-light_in_august
-light_in_august
 light_in_august
 light_in_august
 light_in_august
@@ -10332,8 +10325,6 @@ james_fenimore_cooper
 james_fenimore_cooper
 james_fenimore_cooper
 james_fenimore_cooper
-james_fenimore_cooper
-james_fenimore_cooper
 lonesome_dove
 lonesome_dove
 lonesome_dove
@@ -11005,9 +10996,6 @@ the_last_of_the_mohicans
 the_last_of_the_mohicans
 the_last_of_the_mohicans
 the_last_of_the_mohicans
-invisible_man
-invisible_man
-invisible_man
 invisible_man
 invisible_man
 invisible_man
@@ -11534,8 +11522,6 @@ harriette_simpson_arnow
 harriette_simpson_arnow
 harriette_simpson_arnow
 harriette_simpson_arnow
-blood_meridian
-blood_meridian
 blood_meridian
 blood_meridian
 blood_meridian
