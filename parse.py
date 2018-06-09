@@ -11,6 +11,24 @@ import cPickle as pickle
 Referenced https://www.heatonresearch.com/2017/03/03/python-basic-wikipedia-parsing.html to learn to use iterparse.
 """
 
+"""
+Usage:
+
+Make sure you have a file:
+
+    convec/data/wikipedia.txt
+
+Then, run this from convec as:
+
+    $ python parse.py 'wikipedia.txt'
+
+It will produce files:
+
+    convec/data/adjacency.pickle
+    convec/data/redirect.pickle
+
+"""
+
 
 
 DATA_PATH = './data/'
