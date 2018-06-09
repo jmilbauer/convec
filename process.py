@@ -1,6 +1,6 @@
 import re
 
-link_pattern = r'(\[\[([A-z ]*?)(\|[A-z ]*?)?\]\])'
+link_pattern = r'\[\[([A-z ]*?)(?:\|([A-z ]*?))?\]\]'
 
 # [[article link|hyperlink text]]
 # match.group(0) returns whole thing
