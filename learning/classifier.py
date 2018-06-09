@@ -22,7 +22,7 @@ all_text = [x for sublist in text for x in sublist]
 with open('../data/ld1_labels.txt', 'r') as fh:
     labels = [x.strip() for x in fh.read().strip().split('\n')]
 
-label_rdict = {x:i for i, x in enumerate(labels)}
+label_rdict = {x:i for i, x in enumerate(list(set(labels)))}
 
 from collections import Counter
 ct = Counter(all_text)
@@ -104,7 +104,6 @@ for epoch in range(10):
         model.hidden = model.init_hidden()
         sentence, label = sentence_vectors[i], label_vectors[i]
         output = model(sentence.long())
-        print("MODELED")
         loss = loss_function(output[-1].unsqueeze(0), label)
         loss.backward()
         optimizer.step()
