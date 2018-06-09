@@ -151,6 +151,11 @@ in_page = False
 ns = None
 waiting = False
 title = None
+
+fp = open(xmlPath, 'wb+')
+with open(prePath, 'rb') as fp2:
+    fp.write(fp2.read())
+fp.write('\n')
 for event, elem in etree.iterparse(wikipediaXmlPath, events=('start', 'end')):
 
     tname = strip_tag_namespace(elem.tag)
@@ -181,7 +186,8 @@ for event, elem in etree.iterparse(wikipediaXmlPath, events=('start', 'end')):
                     fake += u"<id>0</id>\n"
                     fake += u"<text>\n{}\n</text>\n".format(elem.text)
                     fake += u"</page>\n"
-                    all_xml.append(fake)
+                    fp.write(fake.encode('utf-8'))
+                    fp.write('\n')
 
     if event == 'end':
         if in_page:
@@ -194,7 +200,8 @@ for event, elem in etree.iterparse(wikipediaXmlPath, events=('start', 'end')):
                     fake += u"<id>0</id>\n"
                     fake += u"<text>\n{}\n</text>\n".format(elem.text)
                     fake += u"</page>\n"
-                    all_xml.append(fake)
+                    fp.write(fake.encode('utf-8'))
+                    fp.write('\n')
 
         if tname == 'page':
             in_page = False
@@ -204,22 +211,9 @@ for event, elem in etree.iterparse(wikipediaXmlPath, events=('start', 'end')):
 
     elem.clear()
 
+with open(postPath, 'rb') as fp3:
+    fp.write(fp3.read())
 
-
-
-with open(xmlPath, 'wb+') as fp:
-    pre = None
-    post = None
-    with open(prePath, 'rb') as fp2:
-        pre = fp2.read()
-    with open(postPath, 'rb') as fp3:
-        post = fp3.read()
-
-    fp.write(pre)
-    for xml in all_xml:
-        fp.write(xml.encode('utf-8'))
-        fp.write('\n')
-    fp.write(post)
 
 with open(tiersPath, 'wb+') as fp:
     fp.write(pickle.dumps(tiers))
