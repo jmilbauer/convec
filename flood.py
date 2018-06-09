@@ -29,7 +29,7 @@ REDIRECT_FILE = 'redirect.pickle'
 ENCODING = "utf-8"
 FLOOD_SOURCE = sys.argv[1]
 FLOOD_FILE = '{}-flood.pickle'.format(FLOOD_SOURCE)
-DISTANCE = sys.argv[2]
+DISTANCE = int(sys.argv[2])
 
 adjacencyPath = os.path.join(DATA_PATH, ADJACENCY_FILE)
 redirectPath = os.path.join(DATA_PATH, REDIRECT_FILE)
