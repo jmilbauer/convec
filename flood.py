@@ -29,7 +29,7 @@ REDIRECT_FILE = 'redirect.pickle'
 ENCODING = "utf-8"
 FLOOD_SOURCE = sys.argv[1]
 FLOOD_FILE = '{}-flood.pickle'.format(FLOOD_SOURCE)
-DISTANCE = int(sys.argv[2])
+DISTANCE = int(sys.argv[2]) + 1
 
 adjacencyPath = os.path.join(DATA_PATH, ADJACENCY_FILE)
 redirectPath = os.path.join(DATA_PATH, REDIRECT_FILE)
@@ -49,6 +49,7 @@ with open(redirectPath, 'rb') as fp:
 tiers = {}
 tiers[0] = set([FLOOD_SOURCE])
 
+start = time.time()
 already_seen = set([FLOOD_SOURCE])
 for i in range(1,DISTANCE):
     tiers[i] = set([])
@@ -58,6 +59,15 @@ for i in range(1,DISTANCE):
             for child in children:
                 already_seen.add(child)
                 tiers[i].add(child)
+time_elapsed = time.time() - start
 
+print("Found flood.")
+print("Total articles: {}".format(len(already_seen)))
+print("Time elapsed: {}".format(time_elapsed))
+
+start = time.time()
 with open(floodPath, 'wb+') as fp:
     fp.write(pickle.dumps(tiers))
+end = time.time() - start
+
+print("Pickled. Time: {}".format(end))
