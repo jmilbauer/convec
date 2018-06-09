@@ -83,6 +83,7 @@ def surface_match(matchobj):
 def surface_form(sentence):
     return re.sub(link_pattern, surface_match, sentence)
 
+
 def process_text(article, text):
     adjacency_matrix[article] = {}
     targets = return_links(text)
@@ -107,6 +108,7 @@ def get_redirect_dictionary():
     in_page = False
     title = ""
     res = {}
+    weird_page = False
     for event, elem in etree.iterparse(wikipediaXmlPath, events=('start', 'end')):
         tname = strip_tag_namespace(elem.tag)
 
@@ -117,8 +119,10 @@ def get_redirect_dictionary():
             if in_page:
 
                 if tname == 'title':
-                    title = init_cap(elem.text)
-
+                    if elem.text == None or len(elem.text) < 1:
+                        continue
+                    else:
+                        title = init_cap(elem.text)
                 if tname == 'redirect' and in_page and title != "":
                     res[title] = init_cap(elem.attrib['title'])
 
@@ -126,6 +130,8 @@ def get_redirect_dictionary():
             if tname == 'page':
                 in_page = False
                 title = ""
+                weird_page = False
+                ns = None
     return res
 
 def build_adjacency_matrix():
@@ -146,7 +152,10 @@ def build_adjacency_matrix():
             if in_page:
 
                 if tname == 'title':
-                    title = init_cap(elem.text)
+                    if elem.text == None:
+                        continue
+                    else:
+                        title = init_cap(elem.text)
                 if tname == 'redirect':
                     is_redirect = True
                 if tname == 'ns':
