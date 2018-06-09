@@ -47,7 +47,7 @@ def clean_sentence(text):
     text = text.lower()
     text = re.sub(r'[0-9]+', 'NUM', text)
     text = text.replace('\n', ' ')
-    text = re.sub(r'\s*', ' ', text)
+    text = re.sub(r'\s+', ' ', text)
     text = text.strip()
     return text
 
