@@ -10,12 +10,20 @@ import nltk
 
 
 DATA_PATH = './data/'
+TEXT_PATH = './text/'
 WIKIPEDIA_XML = sys.argv[1]
+TIER_PATH = 'distances.pickle'
+XML_OUT = 'partial_xml.txt'
+PREAMBLE = 'preamble.txt'
+POSTAMBLE = 'postamble.txt'
 
 link_pattern = r'(\[\[([0-9A-z \(\)\.\-]*?)(?:\|([0-9A-z \(\)\.\-]*?))?\]\])'
 
 wikipediaXmlPath = os.path.join(DATA_PATH, WIKIPEDIA_XML)
-
+tiersPath = os.path.join(DATA_PATH, TIER_PATH)
+xmlPath = os.path.join(TEXT_PATH, XML_OUT)
+prePath = os.path.join(TEXT_PATH, PREAMBLE)
+postPath = os.path.join(TEXT_PATH, POSTAMBLE)
 
 """
 specific doc grabber.
@@ -64,7 +72,9 @@ def surface_form(sentence):
     return re.sub(link_pattern, surface_match, sentence)
 
 
+all_xml = []
 for i in range(1, FLOOD_DEPTH+1):
+
     tiers[i] = set([])
 
     in_page = False
@@ -78,6 +88,12 @@ for i in range(1, FLOOD_DEPTH+1):
         if event == 'start':
             if tname == 'page':
                 in_page = True
+                xml_buffer = etree.tostring(elem)
+                #xml_buffer.append('<page>')
+
+            #else:
+
+                #xml_buffer.append
 
             if in_page:
                 if tname == 'title':
@@ -125,7 +141,81 @@ for i in range(1, FLOOD_DEPTH+1):
 
         elem.clear()
 
+xml_final = []
+xml_buffer = ""
+in_page = False
+ns = None
+waiting = False
+title = None
+for event, elem in etree.iterparse(wikipediaXmlPath, events=('start', 'end')):
 
-for t in tiers:
-    for page in list(sorted(tiers[t])):
-        print("{}\t{}".format(page, t))
+    tname = strip_tag_namespace(elem.tag)
+
+    if event == 'start':
+        if tname == 'page':
+            in_page = True
+        if in_page:
+            if tname == 'title':
+                if elem.text == None:
+                    continue
+                else:
+                    title = init_cap(elem.text)
+
+            if tname == 'redirect':
+                is_redirect = True
+
+            if tname == 'ns':
+                ns = elem.text
+
+            if tname == 'text' and ns == '0' and not is_redirect and (title in all_pages):
+                if elem.text == None:
+                    waiting = True
+                else:
+                    fake = u"<page>"
+                    fake += u"<title>{}<\\title>".format(title)
+                    fake += u"<ns>0<\\ns>"
+                    fake += u"<id>0</id>"
+                    fake += u"<text>{}<\\text>".format(elem.text)
+                    fake += u"<\\page>"
+                    all_xml.append(fake)
+
+    if event == 'end':
+        if in_page:
+            if tname == 'text':
+                if waiting and ns == '0' and waiting and not is_redirect and (title in all_pages):
+                    waiting = False
+                    fake = u"<page>"
+                    fake += u"<title>{}<\\title>".format(title)
+                    fake += u"<ns>0<\\ns>"
+                    fake += u"<id>0</id>"
+                    fake += u"<text>{}<\\text>".format(elem.text)
+                    fake += u"<\\page>"
+                    all_xml.append(fake)
+
+        if tname == 'page':
+            in_page = False
+            ns = None
+            title = ''
+            is_redirect = False
+
+    elem.clear()
+
+
+
+
+with open(xmlPath, 'wb+') as fp:
+    pre = None
+    post = None
+    with open(prePath, 'rb') as fp2:
+        pre = fp2.read()
+    with open(postPath, 'rb') as fp3:
+        post = fp3.read()
+
+    fp.write(pre)
+    for xml in all_xml:
+        fp.write(xml.encode('utf-8'))
+        fp.write('\n')
+    fp.write(post)
+
+with open(tiersPath, 'wb+') as fp:
+    fp.write(pickle.dumps(tiers))
