@@ -175,12 +175,12 @@ for event, elem in etree.iterparse(wikipediaXmlPath, events=('start', 'end')):
                 if elem.text == None:
                     waiting = True
                 else:
-                    fake = u"<page>"
-                    fake += u"<title>{}</title>".format(title)
-                    fake += u"<ns>0</ns>"
-                    fake += u"<id>0</id>"
-                    fake += u"<text>{}</text>".format(elem.text)
-                    fake += u"</page>"
+                    fake = u"<page>\n"
+                    fake += u"<title>{}</title>\n".format(title)
+                    fake += u"<ns>0</ns>\n"
+                    fake += u"<id>0</id>\n"
+                    fake += u"<text>\n{}\n</text>\n".format(elem.text)
+                    fake += u"</page>\n"
                     all_xml.append(fake)
 
     if event == 'end':
@@ -188,12 +188,12 @@ for event, elem in etree.iterparse(wikipediaXmlPath, events=('start', 'end')):
             if tname == 'text':
                 if waiting and ns == '0' and waiting and not is_redirect and (title in all_pages):
                     waiting = False
-                    fake = u"<page>"
-                    fake += u"<title>{}</title>".format(title)
-                    fake += u"<ns>0</ns>"
-                    fake += u"<id>0</id>"
-                    fake += u"<text>{}</text>".format(elem.text)
-                    fake += u"</page>"
+                    fake = u"<page>\n"
+                    fake += u"<title>{}</title>\n".format(title)
+                    fake += u"<ns>0</ns>\n"
+                    fake += u"<id>0</id>\n"
+                    fake += u"<text>\n{}\n</text>\n".format(elem.text)
+                    fake += u"</page>\n"
                     all_xml.append(fake)
 
         if tname == 'page':
