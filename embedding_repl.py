@@ -1,6 +1,6 @@
 import os
 import pickle
-
+import numpy as np
 DATA_PATH = './data/'
 EMBED_PATH = '2layer_50neuron_150emb_0.pkl'
 
@@ -8,7 +8,9 @@ embeddingPath = os.path.join(DATA_PATH, EMBED_PATH)
 
 embeddings = None
 with open(embeddingPath, 'rb') as fp:
-    embeddings = pickle.loads(fp.read())
+    embeddings = pickle.load(fp)
+
+print(list(embeddings.keys()))
 
 def cosine_sim(vec1, vec2):
     norm1 = np.linalg.norm(vec1)
@@ -31,13 +33,14 @@ def k_nearest_neighbors(k, word, m):
                 continue
             sim = cosine_sim(m[word], m[w])
             knn.append((sim, w))
-            knn = sorted(knn)[-k:]
+            knn.sort(key = lambda x: x[0], reverse = True)
+        knn = knn[:k]
         return [(w, round(x,4)) for (x, w) in knn]
     else:
         return []
 
 while True:
-    word = raw_input('> ')
+    word = input('> ')
     if word in embeddings:
         print("Title found. Printing 10 NN.")
         knn = k_nearest_neighbors(10, word, embeddings)
